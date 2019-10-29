@@ -47,9 +47,4 @@
       <Filter>Archivos de recursos</Filter>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\..\..\Documents\Tareas\Segundo Ciclo\Discreta II\Pokemon.txt">
-      <Filter>Archivos de origen</Filter>
-    </Text>
-  </ItemGroup>
 </Project>

@@ -6,6 +6,6 @@ public:
 	~Pokemon();
 public: int NRegional=0;
 public: int NNacional=0;
-public: char Nombre[30] = { "" };
+public: char Nombre[30] = { ' ' };
 };
 

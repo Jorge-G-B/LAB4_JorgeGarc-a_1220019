@@ -179,6 +179,7 @@ namespace LAB4JorgeGarcía12200019 {
 			this->btnOBSNacional->TabIndex = 0;
 			this->btnOBSNacional->Text = L"Ordenar BubbleSort";
 			this->btnOBSNacional->UseVisualStyleBackColor = false;
+			this->btnOBSNacional->Click += gcnew System::EventHandler(this, &MyForm::btnOBSNacional_Click);
 			// 
 			// btnOQSNacional
 			// 
@@ -209,8 +210,9 @@ namespace LAB4JorgeGarcía12200019 {
 
 		}
 #pragma endregion
+		Lista *ListaPkm = new Lista();
 	private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
-
+		
 	}
 	private: System::Void QuickSortN(Pokemon *array, int start, int end) {
 		int pivot;
@@ -251,17 +253,18 @@ namespace LAB4JorgeGarcía12200019 {
 
 		return right;
 	}
-	private: System::Void BurbujaN(Pokemon A[], int n) {
+	private: System::Void BurbujaN() {
 		Pokemon aux;
-		for (int i = 0; i < n-1; i++)
+		for (int i = 0; i < ListaPkm->NElementos-1; i++)
 		{
-			for (int j= i+1; j < n; j++)
+			for (int j= i+1; j < ListaPkm->NElementos; j++)
 			{
-				if ((&A[i])->NNacional > (&A[j])->NNacional){
-					aux = A[i];
-					A[i] = A[j];
-					A[j] = aux;
-
+				if ((&ListaPkm->MostrarP(i))->NNacional > (&ListaPkm->MostrarP(j))->NNacional){
+					aux = ListaPkm->MostrarP(i);
+					ListaPkm->InsertarP(ListaPkm->MostrarP(j),i);
+					ListaPkm->Eliminar(i+1);
+					ListaPkm->InsertarP(aux, j);
+					ListaPkm->Eliminar(j+1);
 				}
 			}
 		}
@@ -294,10 +297,54 @@ namespace LAB4JorgeGarcía12200019 {
 		}
 	}
 	private: System::Void btnIniciar_Click(System::Object^  sender, System::EventArgs^  e) {
-		StreamReader^ streamReader = gcnew StreamReader("..//Pokemon.txt");
-		String^ textoDelArchivo = streamReader->ReadToEnd();
-		Pokemon * pkm = new Pokemon();
+		StreamReader^ streamReader = gcnew StreamReader("Pokemon.txt");
+		String^ texto = streamReader->ReadToEnd();
+		streamReader->Close();
+		Pokemon *pkm = new Pokemon();
+		int i = 1;
 		
+		while (texto->Length > 0) 
+		{
+			int l =0;
+			String^ NumNacional = "";
+			String^ NGen = "";
+			String^ Nombre = "";
+			switch (i) {
+			case 0:
+				
+				for (l = 0; texto[l] != ','; l++)
+				{
+					pkm->Nombre[l] = texto[l];
+				}
+				
+				i++;
+				texto = texto->Remove(0, l + 1);
+				break;
+			case 1:
+				
+				for (l = 0; texto[l] != ','; l++)
+				{
+					NumNacional += texto[l];
+				}
+				pkm->NNacional = System::Convert::ToInt64(NumNacional);
+				i++;
+				texto = texto->Remove(0, l + 1);
+				break;
+			case 2:
+				
+				
+				for (l = 0; texto[l] != ','; l++)
+				{
+					NGen += texto[l];
+				}
+				pkm->NRegional = System::Convert::ToInt64(NGen);
+				i=1;
+				texto = texto->Remove(0, l + 1);
+				ListaPkm->InsertarF(*pkm);
+				break;
+			}
+			Actualizar();
+		}
 		
 	}
 	private: System::Void ReadFile(String^ruta, String^ texto) {
@@ -308,7 +355,27 @@ namespace LAB4JorgeGarcía12200019 {
 	private: System::Void Split(String^TextFromFile) {
 		array <String^>^ arregloString = TextFromFile->Split();
 	}
-	
+	private: System::Void Actualizar() {
+		rtBMenú->Text = "";
+		int k = 0;
+		while (k < ListaPkm->NElementos)
+		{
+			String^ nombre = "";
+			int l = 0;
+			/*while ((&ListaPkm->MostrarP(k))->Nombre[l] != ' ')
+			{
+				nombre += (&ListaPkm->MostrarP(k))->Nombre[l];
+				l++;
+			}
+			rtBMenú->Text += nombre;*/
+			rtBMenú->Text += " " + (&ListaPkm->MostrarP(k))->NNacional + " " + (&ListaPkm->MostrarP(k))->NRegional + " \n";
+			k++;
+		}
+	}
+private: System::Void btnOBSNacional_Click(System::Object^  sender, System::EventArgs^  e) {
+	BurbujaN();
+	Actualizar();
+}
 };
 
 
